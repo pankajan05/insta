@@ -4,15 +4,39 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
 
 class profilecontroller extends Controller
 {
     public function index($user)
     {
-       $user = User::findOrFail($user);
-        return view('profile.index',[
-            'user' => $user,]);
+        $follows = (auth()->user()) ? auth()->user()->following->contains($user) : false;
+        $user = User::findOrFail($user);
+
+        $postcount = Cache::remember(
+            'count.posts.'. $user->id,
+            now()->addSecond(3) ,
+            function() use ($user){
+            return $user->posts->count();
+        });
+        $followers = Cache::remember(
+            'count.followers.'. $user->id,
+            now()->addSecond(3) ,
+            function() use ($user){
+                return $user->profile->followers->count();
+            });
+        $followings = Cache::remember(
+            'count.followings.'. $user->id,
+            now()->addSecond(3) ,
+            function() use ($user){
+                return $user->following->count();
+            });
+
+
+
+
+        return view('profile.index',compact('user', 'follows', 'postcount', 'followers', 'followings'));
     }
 
     public function edit(User $user){
