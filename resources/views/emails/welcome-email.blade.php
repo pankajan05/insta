@@ -1,11 +1,10 @@
 @component('mail::message')
-# Welcome to my instagram
+#welcome to the insta
 
-This is a comunity of follow developer. we love that you signed in
+This is like a social media. It is create to learn the laravel and understand the laravel functionalites.
 
 
-@endcomponent
-All the best,<br>
-Thanks,<br>
-Pankajan
+
+Thanks for using,<br>
+pankajan
 @endcomponent
